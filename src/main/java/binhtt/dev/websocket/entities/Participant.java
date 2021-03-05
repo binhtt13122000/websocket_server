@@ -14,9 +14,12 @@ import javax.persistence.*;
 public class Participant {
     @Id
     @Column(name = "participant-id")
-    private String participantId;
-    @Column(name = "participant-name")
-    private String getParticipantName;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long participantId;
+    @Column(name = "user-id")
+    private String userId;
+    @Column(name = "user-name")
+    private String username;
     @ManyToOne
     @JoinColumn(name = "room-id", nullable = false)
     private ChatRoom chatRoom;
