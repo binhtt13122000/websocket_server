@@ -3,6 +3,7 @@ version: '3'
 services:
   websocket-postgres-compose:
     image: postgres
+    restart: always
     environment:
       POSTGRES_USER: username
       POSTGRES_PASSWORD: password
