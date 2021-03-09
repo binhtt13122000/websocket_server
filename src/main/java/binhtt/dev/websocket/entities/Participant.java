@@ -13,15 +13,15 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Participant {
     @Id
-    @Column(name = "participant-id")
+    @Column(name = "participant_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long participantId;
-    @Column(name = "user-id")
+    @Column(name = "user_id")
     private String userId;
-    @Column(name = "user-name")
+    @Column(name = "user_name")
     private String username;
     @ManyToOne
-    @JoinColumn(name = "room-id", nullable = false)
+    @JoinColumn(name = "room_id", nullable = false)
     private ChatRoom chatRoom;
 
 }

@@ -8,23 +8,23 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "chat-message")
+@Table(name = "chat_message")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatMessage {
     @Id
-    @Column(name = "message-id", nullable = false, updatable = false)
+    @Column(name = "message_id", nullable = false, updatable = false, columnDefinition = "serial")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long messageId;
     @Column(name = "content", nullable = false)
     private String content;
-    @Column(name = "send-time", nullable = false)
+    @Column(name = "send_time", nullable = false)
     private Timestamp sendTime;
     @ManyToOne
-    @JoinColumn(name = "room-id", nullable = false)
+    @JoinColumn(name = "room_id", nullable = false)
     private ChatRoom chatRoom;
     @ManyToOne
-    @JoinColumn(name = "sender-id", nullable = false)
+    @JoinColumn(name = "sender_id", nullable = false)
     private Participant participant;
 }

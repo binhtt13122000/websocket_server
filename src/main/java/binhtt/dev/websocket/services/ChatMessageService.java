@@ -1,9 +1,11 @@
 package binhtt.dev.websocket.services;
 
-import sun.plugin2.message.Message;
+import binhtt.dev.websocket.entities.ChatMessage;
 
 import java.util.List;
 
 public interface ChatMessageService {
-    List<Message> getMessages(String roomId);
+    List<ChatMessage> getMessages(String roomId);
+
+    ChatMessage insertMessage(ChatMessage chatMessage);
 }

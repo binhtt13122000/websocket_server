@@ -9,18 +9,18 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Table(name = "chat-room")
+@Table(name = "chat_room")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatRoom {
     @Id
-    @Column(name = "room-id", nullable = false, updatable = false)
+    @Column(name = "room_id", nullable = false, updatable = false, columnDefinition = "serial")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
-    @Column(name = "room-name")
+    @Column(name = "room_name")
     private String roomName;
-    @Column(name = "create-time")
+    @Column(name = "create_time")
     private Timestamp createTime;
 
     @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
