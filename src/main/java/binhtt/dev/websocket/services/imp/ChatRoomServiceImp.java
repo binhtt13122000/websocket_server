@@ -8,6 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,12 +25,21 @@ public class ChatRoomServiceImp implements ChatRoomService {
     }
 
     @Override
-    public ChatRoom createRoom(ChatRoom chatRoom) {
+    public ChatRoom createRoom(String chatRoomName) {
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setCreateTime(new Timestamp(new Date().getTime()));
+        chatRoom.setRoomName(chatRoomName);
         return chatRoomRepository.save(chatRoom);
     }
+
 
     @Override
     public Page<ChatRoom> getChatRoomsOfUser(String userId, Pageable pageable) {
         return chatRoomRepository.findChatRoomsByParticipant(userId, pageable);
+    }
+
+    @Override
+    public ChatRoom updateRoom(ChatRoom chatRoom) {
+        return chatRoomRepository.save(chatRoom);
     }
 }

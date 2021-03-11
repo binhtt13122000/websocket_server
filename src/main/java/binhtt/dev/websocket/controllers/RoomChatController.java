@@ -2,6 +2,7 @@ package binhtt.dev.websocket.controllers;
 
 import binhtt.dev.websocket.entities.ChatRoom;
 import binhtt.dev.websocket.services.ChatRoomService;
+import binhtt.dev.websocket.services.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,12 +12,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 public class RoomChatController {
     @Autowired
     private ChatRoomService chatRoomService;
+    @Autowired
+    private ParticipantService participantService;
 
     @GetMapping("/chats/{userId}")
     public ResponseEntity getRoomChats(
@@ -40,11 +44,26 @@ public class RoomChatController {
         return new ResponseEntity(chatRoomService.getChatRoomsOfUser(userId, pageable).getContent(), HttpStatus.OK);
     }
 
+    @GetMapping("rooms/{roomId}")
+    public ResponseEntity getRoomById(@PathVariable("roomId") String roomId){
+        try {
+            ChatRoom chatRoom = chatRoomService.getRoomById(Long.parseLong(roomId)).orElse(null);
+            if(chatRoom == null){
+                return  new ResponseEntity("Not found", HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity(chatRoom, HttpStatus.OK);
+            }
+        } catch (NumberFormatException e){
+            return new ResponseEntity("Id is invalid", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/rooms")
     public ResponseEntity createRoom(@RequestBody ChatRoom chatRoom){
-        System.out.println("cc");
         chatRoom.setCreateTime(new Timestamp(new Date().getTime()));
-        chatRoomService.createRoom(chatRoom);
+        ChatRoom newChatRoom = chatRoomService.createRoom(chatRoom.getRoomName());
+//        participantService.addParticipants(,newChatRoom);
+        chatRoomService.updateRoom(newChatRoom);
         return new ResponseEntity(chatRoom,HttpStatus.CREATED);
     }
 

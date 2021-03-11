@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
-    @Query("select c from ChatRoom c where c.participants in (select p from Participant p where p.userId = :userId)")
+    @Query("select c from ChatRoom c where c.roomId in (select p.chatRoom.roomId from Participant p where p.userId = :userId)")
     Page<ChatRoom> findChatRoomsByParticipant(String userId, Pageable pageable);
 }

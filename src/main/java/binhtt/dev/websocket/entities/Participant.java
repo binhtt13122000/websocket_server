@@ -1,5 +1,6 @@
 package binhtt.dev.websocket.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,13 @@ public class Participant {
     private Long participantId;
     @Column(name = "user_id")
     private String userId;
-    @Column(name = "user_name")
-    private String username;
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
+    @JsonIgnore
     private ChatRoom chatRoom;
 
+    public Participant(String userId, ChatRoom chatRoom) {
+        this.userId = userId;
+        this.chatRoom = chatRoom;
+    }
 }
