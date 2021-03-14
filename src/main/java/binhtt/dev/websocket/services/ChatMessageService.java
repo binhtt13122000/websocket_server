@@ -5,7 +5,7 @@ import binhtt.dev.websocket.entities.ChatMessage;
 import java.util.List;
 
 public interface ChatMessageService {
-    List<ChatMessage> getMessages(String roomId);
+    List<ChatMessage> getMessages(Long roomId);
 
     ChatMessage insertMessage(ChatMessage chatMessage);
 }

@@ -13,8 +13,8 @@ public class ChatMessageServiceImp implements ChatMessageService {
     @Autowired
     private ChatMessageRepository chatMessageRepository;
     @Override
-    public List<ChatMessage> getMessages(String roomId) {
-        return null;
+    public List<ChatMessage> getMessages(Long roomId) {
+        return chatMessageRepository.getChatMessagesByChatRoom_RoomIdOrderBySendTimeAsc(roomId);
     }
 
     @Override

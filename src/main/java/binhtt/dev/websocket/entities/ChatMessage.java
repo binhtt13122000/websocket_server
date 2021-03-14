@@ -1,8 +1,10 @@
 package binhtt.dev.websocket.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -22,6 +24,7 @@ public class ChatMessage {
     @Column(name = "send_time", nullable = false)
     private Timestamp sendTime;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "room_id", nullable = false)
     private ChatRoom chatRoom;
     @ManyToOne

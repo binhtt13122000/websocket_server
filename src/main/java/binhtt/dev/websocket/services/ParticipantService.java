@@ -1,9 +1,11 @@
 package binhtt.dev.websocket.services;
 
-import binhtt.dev.websocket.entities.ChatRoom;
+import binhtt.dev.websocket.entities.Participant;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ParticipantService {
-    ChatRoom addParticipants(List<String> participantNames, ChatRoom chatRoom);
+    Optional<Participant> getParticipantById(Long id);
+    void saveParticipants(List<Participant> participants);
 }

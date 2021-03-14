@@ -19,13 +19,12 @@ public class Participant {
     private Long participantId;
     @Column(name = "user_id")
     private String userId;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "avatar")
+    private String avatar;
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
     @JsonIgnore
     private ChatRoom chatRoom;
-
-    public Participant(String userId, ChatRoom chatRoom) {
-        this.userId = userId;
-        this.chatRoom = chatRoom;
-    }
 }

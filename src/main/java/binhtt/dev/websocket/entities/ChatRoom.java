@@ -22,10 +22,12 @@ public class ChatRoom {
     private String roomName;
     @Column(name = "create_time")
     private Timestamp createTime;
-
+    @Column(name = "room_avt")
+    private String roomAvt;
     @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
     private List<ChatMessage> chatMessages;
 
-    @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "chatRoom", fetch = FetchType.EAGER)
     private List<Participant> participants;
+
 }

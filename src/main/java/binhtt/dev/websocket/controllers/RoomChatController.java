@@ -1,8 +1,8 @@
 package binhtt.dev.websocket.controllers;
 
 import binhtt.dev.websocket.entities.ChatRoom;
+import binhtt.dev.websocket.services.ChatMessageService;
 import binhtt.dev.websocket.services.ChatRoomService;
-import binhtt.dev.websocket.services.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,7 +19,7 @@ public class RoomChatController {
     @Autowired
     private ChatRoomService chatRoomService;
     @Autowired
-    private ParticipantService participantService;
+    private ChatMessageService chatMessageService;
 
     @GetMapping("/chats/{userId}")
     public ResponseEntity getRoomChats(
@@ -51,20 +50,12 @@ public class RoomChatController {
             if(chatRoom == null){
                 return  new ResponseEntity("Not found", HttpStatus.NOT_FOUND);
             } else {
+                chatRoom.setChatMessages(chatMessageService.getMessages(Long.parseLong(roomId)));
                 return new ResponseEntity(chatRoom, HttpStatus.OK);
             }
         } catch (NumberFormatException e){
             return new ResponseEntity("Id is invalid", HttpStatus.BAD_REQUEST);
         }
-    }
-
-    @PostMapping("/rooms")
-    public ResponseEntity createRoom(@RequestBody ChatRoom chatRoom){
-        chatRoom.setCreateTime(new Timestamp(new Date().getTime()));
-        ChatRoom newChatRoom = chatRoomService.createRoom(chatRoom.getRoomName());
-//        participantService.addParticipants(,newChatRoom);
-        chatRoomService.updateRoom(newChatRoom);
-        return new ResponseEntity(chatRoom,HttpStatus.CREATED);
     }
 
 }

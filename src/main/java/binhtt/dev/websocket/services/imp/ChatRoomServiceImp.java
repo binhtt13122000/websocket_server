@@ -25,10 +25,7 @@ public class ChatRoomServiceImp implements ChatRoomService {
     }
 
     @Override
-    public ChatRoom createRoom(String chatRoomName) {
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.setCreateTime(new Timestamp(new Date().getTime()));
-        chatRoom.setRoomName(chatRoomName);
+    public ChatRoom createRoom(ChatRoom chatRoom) {
         return chatRoomRepository.save(chatRoom);
     }
 
@@ -36,10 +33,5 @@ public class ChatRoomServiceImp implements ChatRoomService {
     @Override
     public Page<ChatRoom> getChatRoomsOfUser(String userId, Pageable pageable) {
         return chatRoomRepository.findChatRoomsByParticipant(userId, pageable);
-    }
-
-    @Override
-    public ChatRoom updateRoom(ChatRoom chatRoom) {
-        return chatRoomRepository.save(chatRoom);
     }
 }
