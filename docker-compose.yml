@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  websocket-postgres-compose:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: chat-database
+    ports:
+      - '15432:5432'
+    volumes:
+      - database-data:/var/lib/postgresql/data/ # persist data even if container shuts down
+
+  websocket-pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'admin@admin.com'
+      PGADMIN_DEFAULT_PASSWORD: 'admin'
+    ports:
+      - '16543:80'
+    depends_on:
+      - websocket-postgres-compose
+
+volumes:
+  database-data: # named volumes can be managed easier using docker-compose
