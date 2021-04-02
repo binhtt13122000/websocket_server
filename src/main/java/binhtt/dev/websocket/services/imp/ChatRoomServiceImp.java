@@ -1,6 +1,7 @@
 package binhtt.dev.websocket.services.imp;
 
 import binhtt.dev.websocket.entities.ChatRoom;
+import binhtt.dev.websocket.entities.Participant;
 import binhtt.dev.websocket.repositories.ChatRoomRepository;
 import binhtt.dev.websocket.services.ChatRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ChatRoomServiceImp implements ChatRoomService {
@@ -33,5 +35,25 @@ public class ChatRoomServiceImp implements ChatRoomService {
     @Override
     public Page<ChatRoom> getChatRoomsOfUser(String userId, Pageable pageable) {
         return chatRoomRepository.findChatRoomsByParticipant(userId, pageable);
+    }
+
+    @Override
+    public boolean checkExistedRoom(List<Participant> participants) {
+        boolean check = false;
+        for (ChatRoom chatRoom: chatRoomRepository.findAll()) {
+            check = chatRoom.getParticipants()
+                    .stream()
+                    .map(participant -> participant.getUserId())
+                    .collect(Collectors.toList())
+                    .containsAll(participants
+                            .stream()
+                            .map(participant -> participant.getUserId())
+                            .collect(Collectors.toList())
+                    );
+            if(check){
+                break;
+            }
+        }
+        return check;
     }
 }

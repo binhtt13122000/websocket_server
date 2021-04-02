@@ -9,11 +9,13 @@ import binhtt.dev.websocket.services.ChatMessageService;
 import binhtt.dev.websocket.services.ChatRoomService;
 import binhtt.dev.websocket.services.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -49,22 +51,34 @@ public class ChatController {
         }
     }
 
-    @MessageMapping("/chat/create")
-    public void createRoom(@Payload ChatRoom chatRoom){
-        chatRoom.setCreateTime(new Timestamp(new Date().getTime()));
+    @MessageMapping("/chat/create/{userId}")
+    public void createRoom(@DestinationVariable String userId, @Payload ChatRoom chatRoom){
         List<Participant> participants = new ArrayList<>(chatRoom.getParticipants());
-        chatRoom.setParticipants(Collections.emptyList());
-        ChatRoom newRoom = chatRoomService.createRoom(chatRoom);
-        if(newRoom != null){
-            System.out.println(newRoom);
-            for(Participant participant: participants){
-                participant.setChatRoom(newRoom);
-            }
-            participantService.saveParticipants(participants);
-            for (Participant participant: participants) {
-                System.out.println(participant.getUserId());
-                messagingTemplate.convertAndSendToUser(participant.getUserId(), "/queue/messages", newRoom.getRoomId());
-            };
+        if(chatRoomService.checkExistedRoom(participants)){
+            messagingTemplate.convertAndSendToUser(userId, "/queue/messages", "Failed!");
+        } else {
+            System.out.println(1);
+            Timestamp time = new Timestamp(new Date().getTime());
+            chatRoom.setCreateTime(time);
+            chatRoom.setParticipants(Collections.emptyList());
+            ChatRoom newRoom = chatRoomService.createRoom(chatRoom);
+            if(newRoom != null){
+                ChatMessage chatMessage = null;
+                for(Participant participant: participants){
+                    if(userId.equals(participant.getUserId())){
+                        chatMessage = chatRoom.getChatMessages().get(0);
+                        chatMessage.setChatRoom(newRoom);
+                        chatMessage.setSendTime(time);
+                        chatMessage.setParticipant(participant);
+                    }
+                    participant.setChatRoom(newRoom);
+                }
+                participantService.saveParticipants(participants);
+                chatMessageService.insertMessage(chatMessage);
+                for (Participant participant: participants) {
+                    messagingTemplate.convertAndSendToUser(participant.getUserId(), "/queue/messages", newRoom.getRoomId());
+                };
+        }
         }
     }
 }

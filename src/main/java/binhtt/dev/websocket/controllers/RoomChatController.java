@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Optional;
 
 @RestController
@@ -39,7 +37,7 @@ public class RoomChatController {
     public ResponseEntity getRooms(@PathVariable("userId") String userId,
                                    @RequestParam("page") Optional<Integer> page,
                                    @RequestParam("size") Optional<Integer> size){
-        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(4));
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8));
         return new ResponseEntity(chatRoomService.getChatRoomsOfUser(userId, pageable).getContent(), HttpStatus.OK);
     }
 
